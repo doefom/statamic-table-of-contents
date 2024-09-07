@@ -18,7 +18,7 @@ class Toc extends Tags
         $ordered = $this->params->bool('ordered');
 
         // Try the 'content' parameter first, then fallback to 'content' in the context
-        $content = $this->params->get('content', $this->context->get('content'));
+        $content = $this->params->get('from', $this->context->get('content'));
 
         if (! $content) {
             return '';
