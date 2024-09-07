@@ -1,0 +1,37 @@
+{
+    "name": "doefom/statamic-table-of-contents",
+    "autoload": {
+        "psr-4": {
+            "Doefom\\StatamicTableOfContents\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Doefom\\StatamicTableOfContents\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "statamic/cms": "^5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Statamic Table Of Contents",
+            "description": "Statamic Table Of Contents addon"
+        },
+        "laravel": {
+            "providers": [
+                "Doefom\\StatamicTableOfContents\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
