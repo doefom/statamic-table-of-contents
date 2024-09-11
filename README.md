@@ -93,6 +93,41 @@ If you prefer an ordered list instead of an unordered list, you can specify the 
 | `max`     | The maximum heading level to include.                       | `6`       |
 | `ordered` | Whether to render the table of contents as an ordered list. | `false`   |
 
+## Styling the Table of Contents
+
+There is no built-in way to style the table of contents, and therefore it's totally up to you to style it as you see
+fit.
+
+### Using the Tailwind Typography Plugin
+
+If you use the [Tailwind typography plugin](https://github.com/tailwindlabs/tailwindcss-typography) somewhere in your
+project, you can style the table of contents by adding the `prose` class to a surrounding element:
+
+```html
+
+<div class="prose">
+    {{ toc }}
+</div>
+```
+
+### Applying Individual Styles
+
+Or if you prefer your individual styles, you may wrap the `{{ toc }}` tag in another element as well, add your own class
+and apply the styles:
+
+```html
+
+<div class="table-of-contents">
+    {{ toc }}
+</div>
+
+<style>
+    .table-of-contents ul li a {
+        ...
+    }
+</style>
+```
+
 ## Support
 
 If you encounter any issues, feel free to open an issue
