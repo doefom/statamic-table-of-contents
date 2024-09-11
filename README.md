@@ -4,7 +4,7 @@
 
 ## Features
 
-- ✅ Generate a table of contents from a bard or markdown field.
+- ✅ Generate a table of contents from a **bard** or **markdown** field.
 - ✅ Supports all heading levels (h1 - h6).
 - ✅ Specify a range of heading levels to include in the table of contents.
 - ✅ Render the table of contents as an ordered or unordered list.
@@ -20,7 +20,7 @@ composer require doefom/statamic-table-of-contents
 
 ## How to Use
 
-The addon provides a new tag called `{{ toc }}` that you can use in your templates.
+The addon provides a new tag called `{{ toc }}` that you can use anywhere in your antlers templates.
 
 ```html
 {{ toc }}
@@ -36,21 +36,21 @@ The addon provides a new tag called `{{ toc }}` that you can use in your templat
 </ul>
 ```
 
-### Generating the table of contents from a specific bard field
+### Generating the table of contents from a specific field
 
-By default, the tag looks for a bard field named `content` in the context of the page and generates a table of contents
-from the headings in that field. However, you can also specify a different field name like this:
+By default, the tag looks for a field named `content` in the context of the page and generates a table of contents
+from the headings in it. However, you can also specify a different field name like this:
 
 ```text
-{{ toc :from="my_bard_field" }}
+{{ toc :from="my_custom_field" }}
 ```
 
 Note: Make sure to add a colon `:` before the `from` parameter to pass the value of the variable.
 
 ### Specifying a Range of Heading Levels
 
-You can also specify a range of heading levels to be represented in the table of contents. By default, all heading
-levels (h1 - h6) are included. However, you may specify a range like this:
+You can also specify a range of heading levels to be represented in the table of contents (by default, all heading
+levels from h1 to h6 are included):
 
 ```text
 {{ toc min="2" max="4" }}
@@ -68,7 +68,7 @@ You may also specify only the minimum or maximum level:
 
 ### Rendering as an Ordered List
 
-If you prefer an ordered list instead of an unordered list, you can specify the `ordered` parameter like so:
+If you prefer an ordered list instead of an unordered list, you can pass the `ordered` parameter like so:
 
 ```html
 {{ toc ordered="true" }}
@@ -88,7 +88,7 @@ If you prefer an ordered list instead of an unordered list, you can specify the 
 
 | Parameter | Description                                                 | Default   |
 |-----------|-------------------------------------------------------------|-----------|
-| `from`    | The bard field to generate the table of contents from.      | `content` |
+| `from`    | The field to generate the table of contents from.           | `content` |
 | `min`     | The minimum heading level to include.                       | `1`       |
 | `max`     | The maximum heading level to include.                       | `6`       |
 | `ordered` | Whether to render the table of contents as an ordered list. | `false`   |
@@ -130,5 +130,5 @@ and apply the styles:
 
 ## Support
 
-If you encounter any issues, feel free to open an issue
+This addon is supported. If you encounter any issues, feel free to open an issue
 on [GitHub](https://github.com/doefom/statamic-table-of-contents/issues).
