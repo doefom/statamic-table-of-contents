@@ -24,7 +24,7 @@
     "extra": {
         "statamic": {
             "name": "Statamic Table Of Contents",
-            "description": "Statamic Table Of Contents addon"
+            "description": "Automatically generate a table of contents from a bard or markdown field."
         },
         "laravel": {
             "providers": [
@@ -33,5 +33,6 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "license": "MIT"
 }
