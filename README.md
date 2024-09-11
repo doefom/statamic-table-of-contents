@@ -1,10 +1,10 @@
 # Statamic Table Of Contents
 
-> A Statamic addon that generates a table of contents from a bard field.
+> A Statamic addon that generates a table of contents from a bard or markdown field.
 
 ## Features
 
-- ✅ Generate a table of contents from a bard field.
+- ✅ Generate a table of contents from a bard or markdown field.
 - ✅ Supports all heading levels (h1 - h6).
 - ✅ Specify a range of heading levels to include in the table of contents.
 - ✅ Render the table of contents as an ordered or unordered list.
