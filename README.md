@@ -1,6 +1,7 @@
 # Statamic Table Of Contents
 
-> A Statamic addon that generates a table of contents from a bard or markdown field.
+> A Statamic addon that generates a table of contents from a bard or markdown field in your antlers templates using
+> a single tag.
 
 ## Features
 
