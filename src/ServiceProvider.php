@@ -14,7 +14,5 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     public function bootAddon()
-    {
-        Augmentor::replaceExtension('heading', new HeadingWithTocId);
-    }
+    {}
 }

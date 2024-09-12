@@ -52,7 +52,7 @@ class TocBuilderTest extends TestCase
      */
     public function test_that_toc_matches_html_with_increasing_heading_levels(): void
     {
-        $result = (new TocBuilder(self::HTML01))->buildTocAsHtml();
+        $result = (new TocBuilder(self::HTML01))->getTocMarkup();
         $expected = '<ul><li><a href="#heading-01">Heading 01</a></li><ul><li><a href="#heading-02">Heading 02</a></li><ul><li><a href="#heading-03">Heading 03</a></li><ul><li><a href="#heading-04">Heading 04</a></li><ul><li><a href="#heading-05">Heading 05</a></li><ul><li><a href="#heading-06">Heading 06</a></li></ul></ul></ul></ul></ul></ul>';
 
         $this->assertEquals($expected, $result);
@@ -63,7 +63,7 @@ class TocBuilderTest extends TestCase
      */
     public function test_that_toc_matches_html_with_decreasing_heading_levels(): void
     {
-        $result = (new TocBuilder(self::HTML02))->buildTocAsHtml();
+        $result = (new TocBuilder(self::HTML02))->getTocMarkup();
         $expected = '<ul><ul><ul><ul><ul><ul><li><a href="#heading-06">Heading 06</a></li></ul><li><a href="#heading-05">Heading 05</a></li></ul><li><a href="#heading-04">Heading 04</a></li></ul><li><a href="#heading-03">Heading 03</a></li></ul><li><a href="#heading-02">Heading 02</a></li></ul><li><a href="#heading-01">Heading 01</a></li></ul>';
 
         $this->assertEquals($expected, $result);
@@ -71,7 +71,7 @@ class TocBuilderTest extends TestCase
 
     public function test_that_toc_matches_html_with_increasing_and_decreasing_heading_levels(): void
     {
-        $result = (new TocBuilder(self::HTML03))->buildTocAsHtml();
+        $result = (new TocBuilder(self::HTML03))->getTocMarkup();
         $expected = '<ul><li><a href="#heading-01">Heading 01</a></li><ul><li><a href="#heading-02">Heading 02</a></li><ul><li><a href="#heading-03">Heading 03</a></li></ul><li><a href="#heading-02">Heading 02</a></li></ul><li><a href="#heading-01">Heading 01</a></li></ul>';
 
         $this->assertEquals($expected, $result);
@@ -79,7 +79,7 @@ class TocBuilderTest extends TestCase
 
     public function test_that_toc_matches_real_world_structure(): void
     {
-        $result = (new TocBuilder(self::HTML04))->buildTocAsHtml();
+        $result = (new TocBuilder(self::HTML04))->getTocMarkup();
         $expected = '<ul><li><a href="#heading-02">Heading 02</a></li><ul><li><a href="#heading-03">Heading 03</a></li><ul><li><a href="#heading-04">Heading 04</a></li><li><a href="#heading-04">Heading 04</a></li></ul></ul><li><a href="#heading-02">Heading 02</a></li></ul>';
 
         $this->assertEquals($expected, $result);
@@ -91,7 +91,7 @@ class TocBuilderTest extends TestCase
         $builder->setMinLevel(2);
         $builder->setMaxLevel(3);
 
-        $result = $builder->buildTocAsHtml();
+        $result = $builder->getTocMarkup();
         $expected = '<ul><li><a href="#heading-02">Heading 02</a></li><ul><li><a href="#heading-03">Heading 03</a></li></ul><li><a href="#heading-02">Heading 02</a></li></ul>';
 
         $this->assertEquals($expected, $result);
@@ -102,7 +102,7 @@ class TocBuilderTest extends TestCase
         $builder = new TocBuilder(self::HTML04);
         $builder->setOrdered(true);
 
-        $result = $builder->buildTocAsHtml();
+        $result = $builder->getTocMarkup();
         $expected = '<ol><li><a href="#heading-02">Heading 02</a></li><ol><li><a href="#heading-03">Heading 03</a></li><ol><li><a href="#heading-04">Heading 04</a></li><li><a href="#heading-04">Heading 04</a></li></ol></ol><li><a href="#heading-02">Heading 02</a></li></ol>';
 
         $this->assertEquals($expected, $result);
@@ -110,7 +110,7 @@ class TocBuilderTest extends TestCase
 
     public function test_empty_html(): void
     {
-        $result = (new TocBuilder(''))->buildTocAsHtml();
+        $result = (new TocBuilder(''))->getTocMarkup();
 
         $this->assertEquals('', $result);
     }
@@ -118,7 +118,7 @@ class TocBuilderTest extends TestCase
     public function test_html_without_headings(): void
     {
         $result = new TocBuilder('<p>There are no headings in this HTML</p>');
-        $result = $result->buildTocAsHtml();
+        $result = $result->getTocMarkup();
 
         $this->assertEquals('', $result, 'HTML without headings should result in empty TOC');
     }
@@ -131,7 +131,7 @@ class TocBuilderTest extends TestCase
     public function test_headings_with_special_characters_and_html_entities(): void
     {
         $html = '<h2>Some &amp; Others</h2><h3>A heading with "quotes" in it</h3>';
-        $result = (new TocBuilder($html))->buildTocAsHtml();
+        $result = (new TocBuilder($html))->getTocMarkup();
         $expected = '<ul><li><a href="#some-others">Some &amp; Others</a></li><ul><li><a href="#a-heading-with-quotes-in-it">A heading with "quotes" in it</a></li></ul></ul>';
 
         $this->assertEquals($expected, $result);
@@ -140,7 +140,7 @@ class TocBuilderTest extends TestCase
     public function test_single_heading(): void
     {
         $html = '<h2>Only heading in document</h2>';
-        $result = (new TocBuilder($html))->buildTocAsHtml();
+        $result = (new TocBuilder($html))->getTocMarkup();
         $expected = '<ul><li><a href="#only-heading-in-document">Only heading in document</a></li></ul>';
 
         $this->assertEquals($expected, $result);
@@ -149,7 +149,7 @@ class TocBuilderTest extends TestCase
     public function test_skipped_heading_levels(): void
     {
         $html = '<h2>H2</h2><h4>H4</h4><h6>H6</h6>';
-        $result = (new TocBuilder($html))->buildTocAsHtml();
+        $result = (new TocBuilder($html))->getTocMarkup();
         $expected = '<ul><li><a href="#h2">H2</a></li><ul><ul><li><a href="#h4">H4</a></li><ul><ul><li><a href="#h6">H6</a></li></ul></ul></ul></ul></ul>';
 
         $this->assertEquals($expected, $result);

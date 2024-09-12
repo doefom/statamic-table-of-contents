@@ -32,16 +32,19 @@ class Toc extends Tags
         }
 
         $tb = new TocBuilder($html);
+
         if ($minLevel) {
             $tb->setMinLevel($minLevel);
         }
+
         if ($maxLevel) {
             $tb->setMaxLevel($maxLevel);
         }
+
         if ($ordered) {
             $tb->setOrdered($ordered);
         }
 
-        return $tb->buildTocAsHtml();
+        return $tb->build();
     }
 }

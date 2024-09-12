@@ -36,25 +36,37 @@ class TocBuilder
         $this->ordered = $ordered;
     }
 
-    /**
-     * Build the table of contents as HTML.
-     */
-    public function buildTocAsHtml(): string
+    public function build(): string
     {
-        $html = $this->html;
-        $minLevel = $this->minLevel;
-        $maxLevel = $this->maxLevel;
-        $ordered = $this->ordered;
-        $listTag = $ordered ? 'ol' : 'ul';
-
-        $headings = $this->extractHeadings($html, $minLevel, $maxLevel);
+        $headings = $this->extractHeadings();
 
         if ($headings->isEmpty()) {
             return '';
         }
 
+        $tocMarkup = $this->getTocMarkup();
+        $tocJs = $this->getTocJs($headings);
+
+        return $tocMarkup.$tocJs;
+    }
+
+    /**
+     * Build the table of contents as HTML.
+     */
+    public function getTocMarkup(): string
+    {
+        $headings = $this->extractHeadings();
+
+        if ($headings->isEmpty()) {
+            return '';
+        }
+
+        $ordered = $this->ordered;
+
         $startLevel = $headings->pluck('level')->min();
         $prev = $startLevel;
+
+        $listTag = $ordered ? 'ol' : 'ul';
 
         // ------------------------------------------------------------------
         // Build the table of contents as an ordered list
@@ -65,7 +77,7 @@ class TocBuilder
         foreach ($headings as $heading) {
             $level = Arr::get($heading, 'level');
             $text = Arr::get($heading, 'text');
-            $slug = self::slugify($text);
+            $slug = Arr::get($heading, 'slug');
 
             // Calculate depth change
             $depthChange = $level - $prev;
@@ -103,8 +115,12 @@ class TocBuilder
      *
      * @return Collection A collection of headings with 'level' and 'text' keys.
      */
-    protected function extractHeadings(string $html, int $minLevel = 1, int $maxLevel = 6): Collection
+    public function extractHeadings(): Collection
     {
+        $html = $this->html;
+        $minLevel = $this->minLevel;
+        $maxLevel = $this->maxLevel;
+
         $pattern = "/<h([$minLevel-$maxLevel])[^>]*>(.*?)<\/h[$minLevel-$maxLevel]>/";
 
         preg_match_all($pattern, $html, $matches);
@@ -117,14 +133,34 @@ class TocBuilder
             $headings[] = [
                 'level' => intval($matches[1][$i]),
                 'text' => strip_tags($matches[2][$i]),
+                'slug' => self::slugify(strip_tags($matches[2][$i])),
             ];
         }
 
         return collect($headings);
     }
 
+    private function getTocJs(Collection $headings): string
+    {
+        $headingsJson = $headings->toJson();
+
+        return "
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const headings = $headingsJson;
+                    headings.forEach(heading => {
+                        const elements = [...document.querySelectorAll('h' + heading.level)];
+                        const el = elements.find(el => el.textContent === heading.text);
+                        if (el) el.id = heading.slug;
+                    });
+                });
+            </script>
+        ";
+    }
+
     public static function slugify(string $text): string
     {
         return Str::slug(html_entity_decode($text));
     }
+
 }
