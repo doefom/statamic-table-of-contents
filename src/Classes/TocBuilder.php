@@ -106,7 +106,7 @@ class TocBuilder
 
     public function addIdsToHeadings(): string
     {
-        $doc = new DOMDocument();
+        $doc = new DOMDocument;
         $doc->loadHTML($this->html);
 
         $xpath = new DOMXPath($doc);
@@ -140,7 +140,7 @@ class TocBuilder
         $minLevel = $this->minLevel;
         $maxLevel = $this->maxLevel;
 
-        $doc = new DOMDocument();
+        $doc = new DOMDocument;
         $doc->loadHTML($this->html);
 
         $xpath = new DOMXPath($doc);

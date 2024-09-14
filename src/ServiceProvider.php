@@ -2,8 +2,8 @@
 
 namespace Doefom\StatamicTableOfContents;
 
-use Doefom\StatamicTableOfContents\Modifiers\WithIds;
 use Doefom\StatamicTableOfContents\Modifiers\Toc;
+use Doefom\StatamicTableOfContents\Modifiers\WithIds;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
