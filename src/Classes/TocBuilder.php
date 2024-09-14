@@ -107,18 +107,22 @@ class TocBuilder
     public function addIdsToHeadings(): string
     {
         $doc = new DOMDocument;
-        $doc->loadHTML($this->html);
+        $doc->loadHTML(mb_convert_encoding($this->html, 'HTML-ENTITIES', 'UTF-8'));
+
+        if (trim($this->html) === '') {
+            return '';
+        }
 
         $xpath = new DOMXPath($doc);
         $headings = $xpath->query('//h1|//h2|//h3|//h4|//h5|//h6');
 
         $usedSlugs = collect();
         foreach ($headings as $heading) {
-            $slug = $this->slugify($heading->textContent);
+            $slug = Str::slug($heading->textContent);
             $suffix = 1;
 
             while ($usedSlugs->contains($slug)) {
-                $slug = $this->slugify($heading->textContent).'-'.$suffix;
+                $slug = Str::slug($heading->textContent).'-'.$suffix;
                 $suffix++;
             }
 
@@ -140,8 +144,12 @@ class TocBuilder
         $minLevel = $this->minLevel;
         $maxLevel = $this->maxLevel;
 
+        if (trim($this->html) === '') {
+            return collect();
+        }
+
         $doc = new DOMDocument;
-        $doc->loadHTML($this->html);
+        $doc->loadHTML(mb_convert_encoding($this->html, 'HTML-ENTITIES', 'UTF-8'));
 
         $xpath = new DOMXPath($doc);
         $range = collect(range($minLevel, $maxLevel));
@@ -155,12 +163,12 @@ class TocBuilder
         foreach ($headingNodes as $headingNode) {
             $level = intval($headingNode->nodeName[1]);
             $text = $headingNode->textContent;
-            $slug = $this->slugify($text);
+            $slug = Str::slug($text);
 
             // Ensure the slug is unique or this table of contents
             $suffix = 1;
             while ($usedSlugs->contains($slug)) {
-                $slug = $this->slugify($text).'-'.$suffix;
+                $slug = Str::slug($text).'-'.$suffix;
                 $suffix++;
             }
 
@@ -176,10 +184,5 @@ class TocBuilder
         }
 
         return $headings;
-    }
-
-    private function slugify(string $text): string
-    {
-        return Str::slug(html_entity_decode($text));
     }
 }
