@@ -2,17 +2,16 @@
 
 namespace Doefom\StatamicTableOfContents;
 
-use Doefom\StatamicTableOfContents\Nodes\HeadingWithTocId;
-use Doefom\StatamicTableOfContents\Tags\Toc;
-use Statamic\Fieldtypes\Bard\Augmentor;
+use Doefom\StatamicTableOfContents\Modifiers\TocIds;
+use Doefom\StatamicTableOfContents\Modifiers\Toc;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $tags = [
+    protected $modifiers = [
         Toc::class,
+        TocIds::class,
     ];
 
-    public function bootAddon()
-    {}
+    public function bootAddon() {}
 }

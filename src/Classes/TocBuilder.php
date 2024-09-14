@@ -2,52 +2,46 @@
 
 namespace Doefom\StatamicTableOfContents\Classes;
 
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Support\Collection;
 use Statamic\Support\Arr;
 use Statamic\Support\Str;
 
 class TocBuilder
 {
-    protected string $html;
-
     protected int $minLevel = 1;
 
     protected int $maxLevel = 6;
 
     protected bool $ordered = false;
+    protected DOMDocument $doc;
 
-    public function __construct(?string $html = null)
+    public function __construct(string $html)
     {
-        $this->html = $html;
+        $this->doc = new DOMDocument();
+        $this->doc->loadHTML($html);
     }
 
-    public function setMinLevel(int $minLevel): void
+    public function setMinLevel(int $minLevel): self
     {
         $this->minLevel = $minLevel;
+
+        return $this;
     }
 
-    public function setMaxLevel(int $maxLevel): void
+    public function setMaxLevel(int $maxLevel): self
     {
         $this->maxLevel = $maxLevel;
+
+        return $this;
     }
 
-    public function setOrdered(bool $ordered): void
+    public function setOrdered(bool $ordered): self
     {
         $this->ordered = $ordered;
-    }
 
-    public function build(): string
-    {
-        $headings = $this->extractHeadings();
-
-        if ($headings->isEmpty()) {
-            return '';
-        }
-
-        $tocMarkup = $this->getTocMarkup();
-        $tocJs = $this->getTocJs($headings);
-
-        return $tocMarkup.$tocJs;
+        return $this;
     }
 
     /**
@@ -55,7 +49,7 @@ class TocBuilder
      */
     public function getTocMarkup(): string
     {
-        $headings = $this->extractHeadings();
+        $headings = $this->getHeadingsFormatted();
 
         if ($headings->isEmpty()) {
             return '';
@@ -110,57 +104,83 @@ class TocBuilder
         return $toc;
     }
 
+    public function addIdsToHeadings(): string
+    {
+        $minLevel = $this->minLevel;
+        $maxLevel = $this->maxLevel;
+
+        // Prepare xpath expression to select all headings within the min and max level
+        $range = collect(range($minLevel, $maxLevel));
+        $expression = $range->map(fn ($level) => "//h$level")->implode('|'); // e.g. //h2|//h3|//h4
+
+        $xpath = new DOMXPath($this->doc);
+        $headings = $xpath->query($expression);
+
+        $usedSlugs = collect();
+        foreach ($headings as $heading) {
+            $slug = $this->slugify($heading->textContent);
+            $suffix = 1;
+
+            while ($usedSlugs->contains($slug)) {
+                $slug = $this->slugify($heading->textContent).'-'.$suffix;
+                $suffix++;
+            }
+
+            $usedSlugs->add($slug);
+
+            $heading->setAttribute('id', "$slug");
+        }
+
+        return $this->doc->saveHTML();
+    }
+
     /**
      * Extract all headings from the HTML respecting the min and max level.
      *
      * @return Collection A collection of headings with 'level' and 'text' keys.
      */
-    public function extractHeadings(): Collection
+    private function getHeadingsFormatted(): Collection
     {
-        $html = $this->html;
         $minLevel = $this->minLevel;
         $maxLevel = $this->maxLevel;
 
-        $pattern = "/<h([$minLevel-$maxLevel])[^>]*>(.*?)<\/h[$minLevel-$maxLevel]>/";
+        $xpath = new DOMXPath($this->doc);
+        $range = collect(range($minLevel, $maxLevel));
+        $expression = $range->map(fn ($level) => "//h$level")->implode('|'); // e.g. //h2|//h3|//h4
 
-        preg_match_all($pattern, $html, $matches);
-
-        $nbMatches = count($matches[0]);
+        $headingNodes = $xpath->query($expression);
 
         // Loop through the matches and extract the heading level and text
-        $headings = [];
-        for ($i = 0; $i < $nbMatches; $i++) {
-            $headings[] = [
-                'level' => intval($matches[1][$i]),
-                'text' => strip_tags($matches[2][$i]),
-                'slug' => self::slugify(strip_tags($matches[2][$i])),
-            ];
+        $headings = collect();
+        $usedSlugs = collect();
+        foreach ($headingNodes as $headingNode) {
+            $level = intval($headingNode->nodeName[1]);
+            $text = $headingNode->textContent;
+            $slug = $this->slugify($text);
+
+            // Ensure the slug is unique or this table of contents
+            $suffix = 1;
+            while ($usedSlugs->contains($slug)) {
+                $slug = $this->slugify($text).'-'.$suffix;
+                $suffix++;
+            }
+
+            // Keep track of the used slugs
+            $usedSlugs->add($slug);
+
+            // Add the heading to the collection
+            $headings->add([
+                'level' => $level,
+                'text' => $text,
+                'slug' => $slug,
+            ]);
         }
 
-        return collect($headings);
+        return $headings;
     }
 
-    private function getTocJs(Collection $headings): string
-    {
-        $headingsJson = $headings->toJson();
-
-        return "
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const headings = $headingsJson;
-                    headings.forEach(heading => {
-                        const elements = [...document.querySelectorAll('h' + heading.level)];
-                        const el = elements.find(el => el.textContent === heading.text);
-                        if (el) el.id = heading.slug;
-                    });
-                });
-            </script>
-        ";
-    }
-
-    public static function slugify(string $text): string
+    private function slugify(string $text): string
     {
         return Str::slug(html_entity_decode($text));
     }
-
 }
