@@ -6,7 +6,7 @@ use Doefom\StatamicTableOfContents\Classes\TocBuilder;
 use Statamic\Modifiers\Modifier;
 use Statamic\Support\Arr;
 
-class TocIds extends Modifier
+class WithIds extends Modifier
 {
     /**
      * Modify a value.

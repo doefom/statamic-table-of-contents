@@ -10,17 +10,17 @@ use Statamic\Support\Str;
 
 class TocBuilder
 {
+    protected string $html;
+
     protected int $minLevel = 1;
 
     protected int $maxLevel = 6;
 
     protected bool $ordered = false;
-    protected DOMDocument $doc;
 
     public function __construct(string $html)
     {
-        $this->doc = new DOMDocument();
-        $this->doc->loadHTML($html);
+        $this->html = $html;
     }
 
     public function setMinLevel(int $minLevel): self
@@ -106,15 +106,11 @@ class TocBuilder
 
     public function addIdsToHeadings(): string
     {
-        $minLevel = $this->minLevel;
-        $maxLevel = $this->maxLevel;
+        $doc = new DOMDocument();
+        $doc->loadHTML($this->html);
 
-        // Prepare xpath expression to select all headings within the min and max level
-        $range = collect(range($minLevel, $maxLevel));
-        $expression = $range->map(fn ($level) => "//h$level")->implode('|'); // e.g. //h2|//h3|//h4
-
-        $xpath = new DOMXPath($this->doc);
-        $headings = $xpath->query($expression);
+        $xpath = new DOMXPath($doc);
+        $headings = $xpath->query('//h1|//h2|//h3|//h4|//h5|//h6');
 
         $usedSlugs = collect();
         foreach ($headings as $heading) {
@@ -131,7 +127,7 @@ class TocBuilder
             $heading->setAttribute('id', "$slug");
         }
 
-        return $this->doc->saveHTML();
+        return $doc->saveHTML();
     }
 
     /**
@@ -144,7 +140,10 @@ class TocBuilder
         $minLevel = $this->minLevel;
         $maxLevel = $this->maxLevel;
 
-        $xpath = new DOMXPath($this->doc);
+        $doc = new DOMDocument();
+        $doc->loadHTML($this->html);
+
+        $xpath = new DOMXPath($doc);
         $range = collect(range($minLevel, $maxLevel));
         $expression = $range->map(fn ($level) => "//h$level")->implode('|'); // e.g. //h2|//h3|//h4
 
