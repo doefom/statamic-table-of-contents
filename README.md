@@ -269,5 +269,6 @@ When looping through the bard field, you should apply the `toc` modifier wheneve
 
 ## 🛟 Support
 
-This addon is supported. If you encounter any problems, feel free to open an issue
+This addon is enthusiastically supported because I rely on it myself and I appreciate all feedback for features or 
+issues you encounter using this addon. If you run into any problems, feel free to open an issue
 on [GitHub](https://github.com/doefom/statamic-table-of-contents/issues).
