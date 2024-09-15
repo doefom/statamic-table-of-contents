@@ -25,7 +25,7 @@
     "extra": {
         "statamic": {
             "name": "Statamic Table Of Contents",
-            "description": "Automatically generate a table of contents from a bard or markdown field in your antlers templates using a single tag."
+            "description": "Automatically generate a table of contents from a bard or markdown field anywhere in your antlers templates."
         },
         "laravel": {
             "providers": [
