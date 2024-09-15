@@ -3,14 +3,14 @@
 > A Statamic addon that generates a table of contents from a bard or markdown field in your antlers templates using
 > a modifiers.
 
-## Features
+## 🌟 Features
 
 - ✅ Generate a table of contents from a **bard** or **markdown** field.
 - ✅ Supports all heading levels (h1 - h6).
 - ✅ Specify a range of heading levels to include in the table of contents.
 - ✅ Render the table of contents as an ordered or unordered list.
 
-## How to Install
+## 🛠 How to Install
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or
 run the following command from your project root:
@@ -19,7 +19,7 @@ run the following command from your project root:
 composer require doefom/statamic-table-of-contents
 ```
 
-## How to Use
+## 💡 How to Use
 
 The addon provides two modifiers that you can use anywhere in your antlers templates:
 
@@ -267,7 +267,7 @@ When looping through the bard field, you should apply the `toc` modifier wheneve
 </div>
 ```
 
-## Support
+## 🛟 Support
 
 This addon is supported. If you encounter any problems, feel free to open an issue
 on [GitHub](https://github.com/doefom/statamic-table-of-contents/issues).
