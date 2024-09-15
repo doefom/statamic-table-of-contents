@@ -27,7 +27,7 @@ The addon provides two modifiers that you can use anywhere in your antlers templ
 2. `with_ids`: Adds unique IDs to the headings of the rendered html of a given bard or markdown field
 
 If you want to learn more about Statamic modifiers in general, make sure to check out the
-official documentation: https://statamic.dev/modifiers
+official documentation: [https://statamic.dev/modifiers](https://statamic.dev/modifiers)
 
 ### Basic Usage
 
@@ -63,7 +63,7 @@ generated from {{ content_field | with_ids }}
 Keep in mind that you should **always use both modifiers** together to ensure that the table of contents links to the
 correct headings. Using only one of the modifiers will probably not produce the desired results.
 
-Now let's break down the two modifiers:
+Now let's break down the two modifiers.
 
 ### The `toc` Modifier
 
