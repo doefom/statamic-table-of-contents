@@ -1,0 +1,45 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: statamic5
+            php: "8.3"
+            statamic: "^5.0"
+            testbench: "^9.0"
+            phpunit: "^10.5.35"
+          - lane: statamic6
+            php: "8.3"
+            statamic: "^6.0"
+            testbench: "^10.0"
+            phpunit: "^11.5.3"
+
+    name: ${{ matrix.lane }} (PHP ${{ matrix.php }})
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer update --no-interaction --prefer-dist \
+            --with "statamic/cms:${{ matrix.statamic }}" \
+            --with "orchestra/testbench:${{ matrix.testbench }}" \
+            --with "phpunit/phpunit:${{ matrix.phpunit }}"
+
+      - name: Run tests
+        run: vendor/bin/phpunit --no-coverage

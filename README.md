@@ -10,6 +10,18 @@
 - ✅ Specify a range of heading levels to include in the table of contents.
 - ✅ Render the table of contents as an ordered or unordered list.
 
+## ✅ Compatibility
+
+This addon supports:
+
+- **Statamic 5.x**
+- **Statamic 6.x**
+
+The CI pipeline verifies both support lanes with these dependency combinations:
+
+- `statamic/cms:^5.0` + `orchestra/testbench:^9.0` + `phpunit/phpunit:^10.5.35`
+- `statamic/cms:^6.0` + `orchestra/testbench:^10.0` + `phpunit/phpunit:^11.5.3`
+
 ## 🛠 How to Install
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or

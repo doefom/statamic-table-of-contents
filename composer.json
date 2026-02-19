@@ -11,11 +11,11 @@
         }
     },
     "require": {
-        "statamic/cms": "^5.0",
+        "statamic/cms": "^5.0 || ^6.0",
         "ext-dom": "*"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.0"
+        "orchestra/testbench": "^9.0 || ^10.0"
     },
     "config": {
         "allow-plugins": {
